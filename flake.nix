@@ -19,7 +19,7 @@
           ];
 
           shellHook = ''
-            echo "TinyEvo development environment"
+            echo "LiteV development environment"
             # Install the project in editable mode with dev dependencies
             uv pip install -e .[dev]
           '';
