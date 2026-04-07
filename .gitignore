@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ruff_cache/
+.pyright/
+*.egg-info/
+.eggs/
+*.egg
+
+# Environments
+.venv/
+.direnv/
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Misc
+.jj/
+result/
+result-*
