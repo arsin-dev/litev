@@ -136,13 +136,6 @@ Run it:
 python examples/insurance.py
 # Output: Insurance compliance score: 1.00
 ```
-
-Or use the CLI (after installing the package):
-
-```bash
-litev --demo
-```
-
 ## 📖 API Reference
 
 ### Core Classes

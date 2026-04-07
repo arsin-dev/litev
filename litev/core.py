@@ -4,6 +4,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
+# Provider registry
+_providers = {}
+
+def register_provider(name: str, provider_callable):
+    """Register a provider callable under the given name."""
+    _providers[name] = provider_callable
+
+def get_provider(name: str):
+    """Return the provider callable for the given name, or None."""
+    return _providers.get(name)
+
+
+
 @dataclass
 class Config:
     """Configuration for the audit process.
@@ -18,7 +31,7 @@ class Config:
     chunk_size: int = 1024
     chunk_overlap: int = 200
     log_file: Path = Path("results.jsonl")
-    model_provider: str = "stub"    # "stub", "bedrock"
+    model_provider: str = "stub"    # "stub"
     model_name: str = "gpt-4o-mini"
 
 @dataclass
@@ -55,6 +68,13 @@ class Rubric:
         text: Plain-text rubric describing the required criteria.
     """
     text: str
+
+
+async def stub_provider(chunk: Chunk, rubric: Rubric, config: Config) -> tuple[bool, str]:
+    """Stub provider that always returns passed=True."""
+    return True, "stubbed: always compliant"
+
+register_provider("stub", stub_provider)
 
 class ScoreStrategy(ABC):
     """Abstract base class for scoring strategies.
@@ -94,13 +114,16 @@ def chunk_document(data: Data, config: Config) -> List[Chunk]:
     return chunks
 
 async def audit_chunk(chunk: Chunk, rubric: Rubric, config: Config) -> None:
-    """Evaluate a single chunk against the rubric.
-
-    This is a stub implementation that always marks chunks as passed.
-    Override this function to integrate with a real model provider.
-    """
-    chunk.passed = True
-    chunk.raw_resp = "stubbed: always compliant"
+    """Evaluate a single chunk against the rubric using the configured provider."""
+    provider = get_provider(config.model_provider)
+    if provider is None:
+        # Fallback to stub provider
+        chunk.passed = True
+        chunk.raw_resp = f"provider '{config.model_provider}' not found, using stub"
+        return
+    passed, raw_resp = await provider(chunk, rubric, config)
+    chunk.passed = passed
+    chunk.raw_resp = raw_resp
 
 async def run_audit(
     data: Data,

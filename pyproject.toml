@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "LiteV: A lightweight, extensible vetting/auditing system that scores text documents against rubrics using chunking and pluggable model providers."
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "openai>=2.30.0",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

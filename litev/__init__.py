@@ -12,6 +12,8 @@ from .core import (
     chunk_document,
     audit_chunk,
     run_audit,
+    register_provider,
+    get_provider,
 )
 
 __all__ = [
@@ -24,6 +26,8 @@ __all__ = [
     "chunk_document",
     "audit_chunk",
     "run_audit",
+    "register_provider",
+    "get_provider",
 ]
 
 __version__ = "0.1.0"
